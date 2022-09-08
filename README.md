@@ -27,7 +27,7 @@ Makes use of Flask library to create RESTful APIs.
     pip install marshmallow-sqlalchemy
     pip install gnews
 ## Configuration Details
-You need to create a ```config.py``` file in the news_focus_backend/ dir 
+You need to create a ```config.py``` file in the ```news_focus_backend/``` dir 
 and write the following code:
 
 ```
