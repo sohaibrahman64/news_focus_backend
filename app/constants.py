@@ -11,4 +11,3 @@ NEWS_CATEGORIES = [
 ]
 
 URL_PREFIX = '/api/v1'
-NEWS_API_KEY = 'f20cd183831e4a7a885c0ec4c18a14bd'
