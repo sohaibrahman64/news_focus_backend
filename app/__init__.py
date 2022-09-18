@@ -9,7 +9,7 @@ from app.constants import NEWS_CATEGORIES
 app = Flask(__name__)
 
 # Configurations
-app.config.from_object('config')
+app.config.from_object('config.Config')
 
 # Define the database object which is imported
 # by modules and controllers
@@ -33,6 +33,6 @@ db.create_all()
 insert_categories(db)
 insert_all_news(db)
 
-from app.cron import init_scheduler
+# from app.cron import init_scheduler
 
-init_scheduler(db)
+# init_scheduler(db)
