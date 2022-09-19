@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from newspaper import Article
+#from newspaper import Article
 from sqlalchemy import desc
 
 from app import db
