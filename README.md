@@ -97,6 +97,7 @@ Install dependencies
   pip install flask-marshmallow
   pip install marshmallow-sqlalchemy
   pip install gnews
+  pip install newspaper3k
 ```
 
 Start the server

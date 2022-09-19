@@ -15,8 +15,9 @@ class AllNews(Base):
     url = db.Column(db.String(100))
     publisher_name = db.Column(db.String(100))
     publisher_url = db.Column(db.String(100))
+    image = db.Column(db.String(100))
 
-    def __init__(self, cat_id, title, desc, pub_date, url, pub_name, pub_url):
+    def __init__(self, cat_id, title, desc, pub_date, url, pub_name, pub_url, image):
         self.cat_id = cat_id
         self.title = title
         self.description = desc
@@ -24,6 +25,7 @@ class AllNews(Base):
         self.url = url
         self.publisher_name = pub_name
         self.publisher_url = pub_url
+        self.image = image
 
     def __repr__(self):
         return '<AllNews: %s>' % self.title
@@ -31,4 +33,5 @@ class AllNews(Base):
 
 class AllNewsSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'cat_id', 'title', 'description', 'published_date', 'url', 'publisher_name', 'publisher_url')
+        fields = (
+            'id', 'cat_id', 'title', 'description', 'published_date', 'url', 'publisher_name', 'publisher_url', 'image')

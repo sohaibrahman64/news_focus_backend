@@ -1,6 +1,9 @@
 from flask import Blueprint, request, jsonify
+from newspaper import Article
+from sqlalchemy import desc
+
 from app import db
-import config
+# import config
 from app.all_news.models import AllNews, AllNewsSchema
 from gnews import GNews
 
@@ -28,24 +31,34 @@ def insert_all_news(database):
             url = news[j]['url']
             publisher_name = news[j]['publisher']['title']
             publisher_url = news[j]['publisher']['href']
+            image = get_article_image(gnews, url)
+            # image = 'empty'
             all_news_ = AllNews.query.filter_by(title=title).first()
             if not all_news_:
-                all_news_ = AllNews(cat_id, title, description, pub_date, url, publisher_name, publisher_url)
+                all_news_ = AllNews(cat_id, title, description, pub_date, url, publisher_name, publisher_url, image)
                 session = database.session()
                 session.add(all_news_)
                 session.commit()
                 session.close()
 
 
+# To commit
 def convert_to_datetime(date_time_str):
     from datetime import datetime
     date_time_obj = datetime.strptime(date_time_str, '%a, %d %b %Y %H:%M:%S GMT')
     return date_time_obj
 
 
+# Commit 3
+def format_datetime(date_time):
+    from datetime import datetime
+    date_time_obj = datetime.strftime(date_time, '%d %b')
+    return date_time_obj
+
+
 @mod_all_news.route('/all_news/<cat_id>', methods=['GET', 'PUT'])
 def query_all_news(cat_id):
-    news = AllNews.query.filter_by(cat_id=cat_id).all()
+    news = AllNews.query.filter_by(cat_id=cat_id).order_by(desc(AllNews.pub_date)).all()  # Commit 2
     news_list = []
     for single_news in news:
         news_map = {
@@ -53,10 +66,11 @@ def query_all_news(cat_id):
             'cat_id': single_news.cat_id,
             'title': single_news.title,
             'description': single_news.description,
-            'pub_date': single_news.pub_date,
+            'pub_date': format_datetime(single_news.pub_date),
             'url': single_news.url,
             'publisher_name': single_news.publisher_name,
-            'publisher_url': single_news.publisher_url
+            'publisher_url': single_news.publisher_url,
+            'image': single_news.image
         }
         news_list.append(news_map)
     return jsonify({'status': '1', 'message': 'Success', 'data': news_list}), 200
@@ -65,3 +79,12 @@ def query_all_news(cat_id):
 def delete_all_news(database):
     database.session.query(AllNews).delete()
     database.session.commit()
+
+
+# Commit 1
+def get_article_image(gnews, url):
+    article = gnews.get_full_article(url)
+    if article is not None:
+        return article.top_image
+    else:
+        return 'NA'
