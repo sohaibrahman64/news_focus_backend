@@ -9,7 +9,7 @@ from app.constants import NEWS_CATEGORIES
 app = Flask(__name__)
 
 # Configurations
-app.config.from_object('config')
+app.config.from_object('config.Config')
 
 # Define the database object which is imported
 # by modules and controllers
