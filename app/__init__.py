@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_migrate import Migrate
 
 # Define the WSGI application object
 # from app.categories.models import Categories
@@ -14,6 +15,9 @@ app.config.from_object('config.Config')
 # Define the database object which is imported
 # by modules and controllers
 db = SQLAlchemy(app)
+
+
+migrate = Migrate(app, db)
 
 # Init Marshmallow
 ma = Marshmallow(app)
