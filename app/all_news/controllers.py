@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-#from newspaper import Article
+# from newspaper import Article
 from sqlalchemy import desc
 
 from app import db
@@ -10,6 +10,7 @@ from gnews import GNews
 # Init Schema
 from app.categories.controllers import get_category_name
 from app.constants import URL_PREFIX, NEWS_CATEGORIES
+from newspaper import Config
 
 all_news_schema = AllNewsSchema()
 all_news_schemas = AllNewsSchema(many=True)
@@ -31,7 +32,7 @@ def insert_all_news(database):
             url = news[j]['url']
             publisher_name = news[j]['publisher']['title']
             publisher_url = news[j]['publisher']['href']
-            image = get_article_image(gnews, url)
+            image = get_article_image_new(gnews, url)
             # image = 'empty'
             all_news_ = AllNews.query.filter_by(title=title).first()
             if not all_news_:
@@ -85,6 +86,20 @@ def delete_all_news(database):
 def get_article_image(gnews, url):
     article = gnews.get_full_article(url)
     if article is not None:
+        return article.top_image
+    else:
+        return 'NA'
+
+
+def get_article_image_new(gnews, url):
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0) Gecko/20100101 Firefox/78.0'
+    config = Config()
+    config.browser_user_agent = user_agent
+    config.request_timeout = 10
+    article = gnews.get_full_article(url)
+    if article is not None:
+        article.config = config
+        print(article.config)
         return article.top_image
     else:
         return 'NA'
