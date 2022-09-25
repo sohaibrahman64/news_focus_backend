@@ -4,6 +4,15 @@
 # import time
 # import atexit
 
+import sys
+
+path = '/home/news_focus_backend/app'
+
+if path not in sys.path
+    sys.path.append(path)
+
+from app import app
+
 from app.all_news.controllers import delete_all_news, insert_all_news
 from app import db
 
