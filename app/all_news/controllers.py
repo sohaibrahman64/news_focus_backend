@@ -11,6 +11,7 @@ from gnews import GNews
 from app.categories.controllers import get_category_name
 from app.constants import URL_PREFIX, NEWS_CATEGORIES
 from newspaper import Config
+from app.utils.utils import convert_to_datetime, format_datetime
 
 all_news_schema = AllNewsSchema()
 all_news_schemas = AllNewsSchema(many=True)
@@ -43,20 +44,6 @@ def insert_all_news(database):
                 session.close()
 
 
-# To commit
-def convert_to_datetime(date_time_str):
-    from datetime import datetime
-    date_time_obj = datetime.strptime(date_time_str, '%a, %d %b %Y %H:%M:%S GMT')
-    return date_time_obj
-
-
-# Commit 3
-def format_datetime(date_time):
-    from datetime import datetime
-    date_time_obj = datetime.strftime(date_time, '%d %b')
-    return date_time_obj
-
-
 @mod_all_news.route('/all_news/<cat_id>', methods=['GET', 'PUT'])
 def query_all_news(cat_id):
     news = AllNews.query.filter_by(cat_id=cat_id).order_by(desc(AllNews.pub_date)).all()  # Commit 2
@@ -74,7 +61,26 @@ def query_all_news(cat_id):
             'image': single_news.image
         }
         news_list.append(news_map)
-    return jsonify({'status': '1', 'message': 'Success', 'data': news_list}), 200
+    return jsonify({'status': '1', 'message': 'Success', 'articles': news_list}), 200
+
+
+def query_all_news_articles():
+    news = AllNews.query.all()
+    news_list = []
+    for single_news in news:
+        news_map = {
+            'id': single_news.id,
+            'cat_id': single_news.cat_id,
+            'title': single_news.title,
+            'description': single_news.description,
+            'pub_date': format_datetime(single_news.pub_date),
+            'url': single_news.url,
+            'publisher_name': single_news.publisher_name,
+            'publisher_url': single_news.publisher_url,
+            'image': single_news.image
+        }
+        news_list.append(news_map)
+    return news_list
 
 
 def delete_all_news(database):

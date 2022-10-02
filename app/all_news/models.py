@@ -1,7 +1,9 @@
 from app import db, ma
 
-
 # Define a base model for other database table to inherit
+from app.full_article.models import FullArticle
+
+
 class Base(db.Model):
     __abstract__ = True
     id = db.Column(db.Integer, primary_key=True)
@@ -16,6 +18,8 @@ class AllNews(Base):
     publisher_name = db.Column(db.String(100))
     publisher_url = db.Column(db.String(100))
     image = db.Column(db.String(100))
+    # full_article = db.relationship("FullArticle", backref="full_article", lazy=True,
+    #                                primaryjoin=(FullArticle.news_id == id))
 
     def __init__(self, cat_id, title, desc, pub_date, url, pub_name, pub_url, image):
         self.cat_id = cat_id

@@ -25,7 +25,6 @@ def insert_categories(database):
             session.close()
 
 
-
 def get_category_name(cat_id):
     category = Categories.query.filter_by(id=cat_id).first()
     cat_name = category.name
