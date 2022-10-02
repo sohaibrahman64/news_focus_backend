@@ -105,7 +105,6 @@ def get_article_image_new(gnews, url):
     article = gnews.get_full_article(url)
     if article is not None:
         article.config = config
-        print(article.config)
         return article.top_image
     else:
         return 'NA'
