@@ -70,7 +70,7 @@ def delete_full_articles(database):
 
 @mod_full_article.route('/full_article/<news_id>', methods=['GET'])
 def query_full_article(news_id):
-    full_article = FullArticle.query.filter_by(news_id=news_id).all()
+    full_article = FullArticle.query.filter_by(news_id=news_id).first()
     full_article_map = {
         'id': full_article.id,
         'news_id': full_article.news_id,
