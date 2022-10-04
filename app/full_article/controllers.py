@@ -12,11 +12,13 @@ mod_full_article = Blueprint('full_article', __name__, url_prefix=URL_PREFIX)
 
 def parse_keywords(article):
     keys_ = 'NA'
-    if len(article.keywords) > 0:
+    if len(article.authors) > 0:
+        keys_ = ''
         for j in range(len(article.keywords)):
-            keys_ = article.keywords[j]
-            if j < len(article.keywords):
-                keys_ = keys_.concat(",")
+            if j < len(article.keywords) - 1:
+                keys_ += article.keywords[j] + ", "
+            else:
+                keys_ += article.keywords[j]
     return keys_
 
 
@@ -64,3 +66,21 @@ def insert_full_articles(database, all_news_articles):
 def delete_full_articles(database):
     database.session.query(FullArticle).delete()
     database.session.commit()
+
+
+@mod_full_article.route('/full_article/<news_id>', methods=['GET'])
+def query_full_article(news_id):
+    full_article = FullArticle.query.filter_by(news_id=news_id).all()
+    full_article_map = {
+        'id': full_article.id,
+        'news_id': full_article.news_id,
+        'cat_id': full_article.cat_id,
+        'title': full_article.title,
+        'author': full_article.author,
+        'text': full_article.text,
+        'image': full_article.image,
+        'publisher_name': full_article.publisher_name,
+        'pub_date': full_article.pub_date,
+        'keywords': full_article.keywords,
+    }
+    return full_article_map
